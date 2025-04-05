@@ -356,7 +356,102 @@ quadrantChart
    - Risk: Coordinating multiple AI processes reliably at scale
    - Mitigation: Modular architecture, comprehensive testing, gradual feature rollout
 
-## 7. Solution Architecture
+## 7. Privacy and Security Architecture
+
+```mermaid
+graph TD
+    A[Privacy-First Approach] --> B[Local Processing]
+    A --> C[Anonymization]
+    A --> D[User Control]
+    A --> E[Transparency]
+
+    B --> F[Rule-Based Pattern Matching]
+    B --> G[Local Code Parsing]
+    B --> H[Static Analysis]
+
+    C --> I[Variable Name Replacement]
+    C --> J[Comment Removal]
+    C --> K[Project-Specific Identifier Generalization]
+
+    D --> L[Opt-In Data Sharing]
+    D --> M[Granular Permissions]
+    D --> N[Local-Only Mode Option]
+
+    style A fill:#f9f, stroke:#333, stroke-width:2px, color:#000, font-weight:bold
+    style B fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+    style C fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+    style D fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+```
+
+### Security Concerns and Solutions
+
+Many developers have legitimate concerns about uploading their entire codebase to external services. SkillForge addresses these concerns with a multi-layered approach:
+
+#### 1. Local-First Processing
+
+- **Rule-Based Analysis**: Code patterns are identified locally using predefined rules and pattern matching
+- **No Raw Code Transmission**: Original code never leaves the user's machine
+- **Language-Specific Parsers**: Local parsing of code into abstract syntax trees for analysis
+- **Static Analysis**: Security and performance issues detected locally
+
+#### 2. Privacy-Preserving Communication
+
+- **Anonymization Pipeline**: Before any server communication, code is processed to:
+  - Replace variable and function names with generic placeholders
+  - Remove comments and documentation
+  - Generalize string literals and identifiers
+  - Preserve only structural patterns and framework calls
+
+- **Example Transformation**:
+
+  Original code:
+  ```php
+  function acme_process_payment($order) {
+    // ACME Corp custom payment processing
+    $api_key = Settings::get('acme_payment_key');
+    $gateway = new AcmePaymentGateway($api_key);
+    $response = $gateway->processPayment($order->id());
+    \Drupal::logger('acme_payment')->info('Payment processed');
+  }
+  ```
+
+  Anonymized version sent to server:
+  ```php
+  function module_process($param1) {
+    // [COMMENT REMOVED]
+    $var1 = Settings::get('config_key');
+    $var2 = new PaymentGateway($var1);
+    $var3 = $var2->processMethod($param1->id());
+    \Drupal::logger('module')->method('Generic message');
+  }
+  ```
+
+#### 3. User Control and Transparency
+
+- **Explicit Permissions**: Clear opt-in for any code analysis
+- **Granular Controls**: Settings to determine what can be analyzed
+- **Visibility**: Option to review anonymized code before sending
+- **Audit Logs**: Transparent record of all server communications
+
+#### 4. Alternative Approaches
+
+For users with stricter security requirements, SkillForge offers:
+
+- **Metadata-Only Analysis**: Analyze only project structure and dependencies
+- **Manual Input**: Describe technologies and challenges without code sharing
+- **Snippet-Based Learning**: Share only specific, non-sensitive code snippets
+- **Local-Only Mode**: Limited functionality that operates entirely offline
+
+### Enterprise Security Options
+
+For organizations with strict security policies:
+
+- **Self-Hosted Option**: Deploy SkillForge within company infrastructure
+- **VPC Deployment**: Dedicated cloud instance within private network
+- **Custom Data Retention**: Configurable policies for data handling
+- **SSO Integration**: Enterprise authentication systems support
+
+## 8. Solution Architecture
 
 ```mermaid
 graph TD
@@ -392,13 +487,73 @@ graph TD
     style R fill:#f9f, stroke:#333, stroke-width:2px, color:#000, font-weight:bold
 ```
 
+### Platform Components
+
+```mermaid
+graph TD
+    A[SkillForge Ecosystem] --> B[Web Platform]
+    A --> C[IDE Extensions]
+    A --> D[Mobile App]
+
+    B --> B1[Learning Dashboard]
+    B --> B2[Knowledge Library]
+    B --> B3[Future Self Planning]
+    B --> B4[Progress Analytics]
+    B --> B5[Team Collaboration]
+
+    C --> C1[VS Code Extension]
+    C --> C2[JetBrains Plugin]
+    C --> C3[Browser Extension]
+
+    C1 --> C1a[Learning Panel]
+    C1 --> C1b[Code Analysis]
+    C1 --> C1c[Practice Exercises]
+
+    style A fill:#f9f, stroke:#333, stroke-width:2px, color:#000, font-weight:bold
+    style B fill:#9f6, stroke:#333, stroke-width:1px, color:#000
+    style C fill:#9f6, stroke:#333, stroke-width:1px, color:#000
+```
+
+SkillForge consists of multiple integrated components that work together to create a comprehensive learning ecosystem:
+
+#### 1. Web Platform (Primary Hub)
+
+The web platform serves as the central hub for the SkillForge experience:
+
+- **Learning Dashboard**: Personalized overview of learning progress and recommendations
+- **Knowledge Library**: Organized repository of saved learning materials and resources
+- **Future Self Planning**: Tools for defining career goals and creating learning roadmaps
+- **Progress Analytics**: Detailed insights into learning patterns and knowledge growth
+- **Team Features**: Collaborative learning and knowledge sharing (team tier)
+- **Account Management**: Subscription, preferences, and settings
+
+#### 2. IDE Extensions (Context-Specific Learning)
+
+IDE extensions bring learning directly into the development workflow:
+
+- **VS Code Extension**: Primary IDE integration for web and Drupal development
+- **JetBrains Plugin**: Support for PHPStorm and other JetBrains IDEs
+- **Learning Panel**: Rich interface for in-editor learning (detailed in Learning Experience section)
+- **Code Analysis**: Local pattern recognition and learning opportunity identification
+- **Practice Exercises**: Interactive coding challenges within the IDE
+
+#### 3. Mobile App (On-the-Go Learning)
+
+The mobile app (future development) enables learning away from the computer:
+
+- **Spaced Repetition**: Quick review sessions to reinforce knowledge
+- **Micro-Learning**: Short, focused learning modules for spare moments
+- **Progress Tracking**: Synchronization with the web platform
+- **Offline Access**: Downloaded learning materials for offline use
+
 ### Technical Stack
 
-- **Frontend**: React SPA for web application, browser extension using Manifest V3
+- **Frontend**: React SPA for web application, TypeScript, Monaco Editor for code examples
 - **Backend**: Drupal 10 providing API services, content management, and user management
 - **AI Processing**: Custom modules for OpenAI/Anthropic API integration
 - **Database**: PostgreSQL for structured data, potentially Elasticsearch for advanced search
 - **Infrastructure**: Cloud hosting (AWS/GCP/Azure) with containerization for scalability
+- **IDE Extensions**: VS Code Extension API, JetBrains Platform SDK
 
 ### Core Workflows
 
@@ -467,7 +622,162 @@ sequenceDiagram
     App->>User: Show how to apply learning
 ```
 
-## 8. Plan of Action
+## 9. Learning Experience
+
+```mermaid
+graph TD
+    A[Learning Experience] --> B[IDE Learning Panel]
+    A --> C[Interactive Practice]
+    A --> D[Application Suggestions]
+    A --> E[Spaced Repetition]
+
+    B --> B1[Context-Aware Learning]
+    B --> B2[Code Pattern Comparison]
+    B --> B3[Visual Explanations]
+
+    C --> C1[Embedded Code Editor]
+    C --> C2[Validation & Feedback]
+    C --> C3[Progressive Challenges]
+
+    D --> D1[Refactoring Suggestions]
+    D --> D2[Implementation Examples]
+    D --> D3[Best Practice Guidance]
+
+    style A fill:#f9f, stroke:#333, stroke-width:2px, color:#000, font-weight:bold
+    style B fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+    style C fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+    style D fill:#ddf, stroke:#333, stroke-width:1px, color:#000
+```
+
+### Learning Panel Interface
+
+The Learning Panel is the central interface for in-IDE learning:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ SkillForge Learning Panel                                  _ □ X │
+├─────────────────────────────────────────────────────────────────┤
+│ [Home] [History] [Saved] [Settings]           🔍 Search...       │
+├─────────────────────────────────────────────────────────────────┤
+│ LEARNING OPPORTUNITIES                                          │
+├─────────────────────────────────────────────────────────────────┤
+│ ● Entity API Performance (High Relevance)                     ▼ │
+│ ○ Drupal Commerce Order Processing                              │
+│ ○ Dependency Injection Best Practices                           │
+├─────────────────────────────────────────────────────────────────┤
+│ ENTITY API PERFORMANCE                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ When processing multiple entities, batch operations provide     │
+│ significant performance improvements over individual saves.     │
+│                                                                 │
+│ 📊 Performance Impact                                           │
+│ ┌──────────────────────────────────────────────────┐           │
+│ │ Individual saves: ~500ms per entity              │           │
+│ │ Batch save:       ~50ms per entity               │           │
+│ └──────────────────────────────────────────────────┘           │
+│                                                                 │
+│ 📝 Your Current Pattern                                         │
+│ ```php                                                          │
+│ foreach ($items as $item) {                                     │
+│   $product = $item->getPurchasedEntity();                       │
+│   $product->set('field_stock', $new_value);                     │
+│   $product->save(); // Individual save in loop                  │
+│ }                                                               │
+│ ```                                                             │
+│                                                                 │
+│ ✅ Recommended Pattern                                          │
+│ ```php                                                          │
+│ $products_to_save = [];                                         │
+│ foreach ($items as $item) {                                     │
+│   $product = $item->getPurchasedEntity();                       │
+│   $product->set('field_stock', $new_value);                     │
+│   $products_to_save[] = $product;                               │
+│ }                                                               │
+│ \Drupal::entityTypeManager()                                    │
+│   ->getStorage('commerce_product_variation')                    │
+│   ->saveMultiple($products_to_save);                            │
+│ ```                                                             │
+│                                                                 │
+│ [Apply to My Code] [Practice This Pattern] [Save for Later] [↗] │
+├─────────────────────────────────────────────────────────────────┤
+│ RELATED CONCEPTS                                                │
+├─────────────────────────────────────────────────────────────────┤
+│ ◆ Entity Storage API                                            │
+│ ◆ Drupal Batch Operations                                       │
+│ ◆ Commerce Product Variations                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Key Features:
+
+1. **Context-Aware Learning**: Content tailored to the code being worked on
+2. **Pattern Comparison**: Side-by-side view of current and recommended patterns
+3. **Visual Explanations**: Charts and diagrams to illustrate concepts
+4. **Action Buttons**: Direct application to code or practice options
+5. **Related Concepts**: Connections to broader knowledge areas
+
+### Interactive Practice System
+
+The practice system enables hands-on learning directly within the IDE:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ PRACTICE: BATCH ENTITY OPERATIONS                         _ □ X │
+├─────────────────────────────────────────────────────────────────┤
+│ 📝 Instructions                                                 │
+│ Refactor this code to use batch entity saving instead of        │
+│ individual saves in the loop.                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ 📋 Code Editor                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│ ```php                                                          │
+│ function update_product_prices($products, $increase_percent) {  │
+│   // Calculate and update prices for multiple products          │
+│   foreach ($products as $product) {                             │
+│     $old_price = $product->get('field_price')->value;           │
+│     $new_price = $old_price * (1 + $increase_percent/100);      │
+│     $product->set('field_price', $new_price);                   │
+│     $product->save(); // Replace this with batch saving         │
+│   }                                                             │
+│                                                                 │
+│   // Add code here to implement batch saving                    │
+│ }                                                               │
+│ ```                                                             │
+├─────────────────────────────────────────────────────────────────┤
+│ [Run Code] [Check Solution] [Show Hint] [Reset]                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Practice Features:
+
+1. **Embedded Code Editor**: Full-featured Monaco editor with syntax highlighting
+2. **Focused Exercises**: Targeted practice of specific patterns and concepts
+3. **Intelligent Validation**: Pattern-based and AST analysis of solutions
+4. **Personalized Feedback**: Specific guidance based on the user's approach
+5. **Progressive Difficulty**: Exercises that build on previously learned concepts
+
+### Learning Scenarios
+
+The system supports various learning scenarios:
+
+1. **Pattern Improvement**: Enhancing existing code patterns with better approaches
+2. **Bug Fixing**: Identifying and resolving common errors
+3. **Implementation Challenges**: Building functionality from scratch
+4. **Security Hardening**: Improving code security
+5. **Performance Optimization**: Making code more efficient
+
+### Spaced Repetition System
+
+Knowledge retention is reinforced through:
+
+1. **Timed Reviews**: Scheduled review prompts based on forgetting curve
+2. **Quick Quizzes**: Brief knowledge checks in the IDE
+3. **Application Challenges**: Practical application of previously learned concepts
+4. **Knowledge Connections**: Relating new concepts to previously learned material
+5. **Progress Tracking**: Visual representation of knowledge retention over time
+
+## 10. Plan of Action
 
 ```mermaid
 gantt
@@ -548,7 +858,7 @@ gantt
    - Cost optimization
    - Scalability enhancements
 
-## 9. Monetization Strategy
+## 11. Monetization Strategy
 
 ```mermaid
 graph TD
@@ -611,7 +921,7 @@ graph TD
 - **Year 2**: Expansion phase, target 10,000 paying users
 - **Year 3**: Team/Enterprise focus, target 25,000 individual users plus 50 enterprise clients
 
-## 10. Next Steps
+## 12. Next Steps
 
 1. **Validate Core Assumptions**
    - Conduct user interviews with 15-20 Drupal developers
@@ -638,3 +948,4 @@ graph TD
 I believe SkillForge addresses a critical need in the professional development space with a unique, AI-powered approach that respects the time constraints and practical needs of busy professionals. The initial focus on Drupal developers leverages your expertise while providing a clear path to broader market expansion.
 
 The key to success will be delivering on the core promise: learning that directly and immediately enhances work capabilities. By maintaining this focus on practical application and measurable impact, SkillForge can differentiate itself in an increasingly crowded learning platform market.
+
